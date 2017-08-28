@@ -384,16 +384,20 @@ public class FourInaRowMain {
 			int whoWon = 0;
 			while (running) {
 				if (running) {
-					int xCord = chooseDrop(w, Color.yellow); /*chooseDrop returns the column 
+					int xCord = chooseDrop(w, Color.yellow); 
+					/*chooseDrop returns the column 
 					where the coin will be dropped */
-					whoWon = drop(w, Color.yellow, xCord, 1); /*the drop method returns 0 if no player has won,
+					whoWon = drop(w, Color.yellow, xCord, 1); 
+					/*the drop method returns 0 if no player has won,
 					1 if player 1 has won, 2 if player 2 has won and 3 if there are no free blocks left; i. e. 
 					it is a tie */
-					if (whoWon != 0) { /* if a player has won or there are no free blocks left the game ends */
+					if (whoWon != 0) { 
+					/* if a player has won or there are no free blocks left the game ends */
 						running = false;
 					}
 				}
-				if (running) { /* the same as above for player 2 */
+				if (running) { 
+				/* the same as above for player 2 */
 					int xCord = chooseDrop(w, Color.magenta);
 					whoWon = drop(w, Color.magenta, xCord, 2);
 					if (whoWon != 0) {
@@ -402,7 +406,8 @@ public class FourInaRowMain {
 				}
 
 			}
-			playerWon(w, whoWon); /*writes in the window who has won or if it is a tie and let the player 
+			playerWon(w, whoWon); 
+			/*writes in the window who has won or if it is a tie and let the player 
 			choose if he/she wants to play again */
 
 		}
