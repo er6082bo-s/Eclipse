@@ -3,8 +3,6 @@ package pak;
 import java.awt.Color;
 
 
-import pack.SimpleWindow;
-
 public class Block {
 	private int x;
 	private int y;
