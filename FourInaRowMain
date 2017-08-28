@@ -1,0 +1,426 @@
+package pak;
+
+import java.awt.Color;
+import java.util.Random;
+
+
+public class FourInaRowMain {
+
+	private boolean[][] matrix1;
+	private boolean[][] matrix2;
+	private boolean[][] matrixAll;
+
+	public FourInaRowMain() {
+	}
+
+	/*
+	 * sets all the elements in the matrixes except the bottom row to false. That the
+	 * bottom row is set to true prevents the coins from falling forever
+	 */
+	public void defaultMatrixes() {
+		matrix1 = new boolean[7][8];
+		matrix2 = new boolean[7][8];
+		matrixAll = new boolean[7][8];
+
+		for (int i = 0; i < 7; i++) {
+			matrix1[i][7] = true;
+		}
+		for (int i = 0; i < 7; i++) {
+			matrix2[i][7] = true;
+		}
+		for (int i = 0; i < 7; i++) {
+			matrixAll[i][7] = true;
+		}
+	}
+
+	/*
+	 * prints the menu
+	 */
+	public void printMenu(SimpleWindow w) {
+		w.moveTo(-100, -100);
+		w.setLineColor(Color.blue);
+		w.setLineWidth(100000);
+		w.lineTo(1000, 1500);
+		w.setLineWidth(5);
+		w.setLineColor(Color.white);
+		w.moveTo(50, 50);
+		w.lineTo(100, 50);
+		w.lineTo(100, 100);
+		w.lineTo(50, 100);
+		w.lineTo(50, 50);
+		w.moveTo(60, 70);
+		w.setLineColor(Color.white);
+		w.writeText("Play");
+		w.moveTo(100, 120);
+		w.writeText("Play with a friend to get four in a row.");
+		w.moveTo(100, 140);
+		w.writeText("Move your coin to the left by pressing \"a\" and to the right by pressing \"d\".");
+		w.moveTo(100, 160);
+		w.writeText("Drop it by pressing space. Good luck!");
+	}
+
+	/*
+	 * prints something when a player has won and let them decide if the want to
+	 * play again
+	 */
+	public int playerWon(SimpleWindow w, int whoWon) {
+		w.moveTo(100, 30);
+		w.setLineColor(Color.blue);
+		if (whoWon == 1) {
+			w.writeText("Congratulations! The yellow one won!");
+		}
+		if (whoWon == 2) {
+			w.writeText("Congratulations! The purple one won!");
+		}
+		if (whoWon == 3) {
+
+			w.writeText("Now that was a game! It is a tie! ");
+
+		}
+
+		w.moveTo(100, 50);
+		w.setLineColor(Color.blue);
+		w.setLineWidth(8);
+		w.lineTo(200, 50);
+		w.lineTo(200, 80);
+		w.lineTo(100, 80);
+		w.lineTo(100, 50);
+		w.moveTo(125, 70);
+		w.writeText("Play again!");
+
+		while (true) {
+			w.waitForMouseClick();
+			if (w.getMouseX() > 100 && w.getMouseX() < 200 && w.getMouseY() > 50 && w.getMouseY() < 80) {
+				return 1;
+			}
+		}
+
+	}
+
+	/*
+	 * lets the player choose an alternative in the menu
+	 */
+	public boolean menuChoice(SimpleWindow w) {
+		while (true) {
+			w.waitForMouseClick();
+			if (w.getMouseX() > 50 && w.getMouseX() < 100 && w.getMouseY() > 50 && w.getMouseY() < 100) {
+				return true;
+			}
+		}
+
+	}
+
+	/*
+	 * decides where the coin will be dropped
+	 */
+
+	public int chooseDrop(SimpleWindow w, Color col) {
+		Coin c = new Coin(0, 0, w, col);
+		while (true) {
+			char key = w.waitForKey();
+			if (key == 'd' && c.getX() < 6) {
+				c = new Coin(c.getX(), 0, w, Color.white);
+				c = new Coin(c.getX() + 1, 0, w, col);
+			}
+			if (key == 'a' && c.getX() > 0) {
+				c = new Coin(c.getX(), 0, w, Color.white);
+				c = new Coin(c.getX() - 1, 0, w, col);
+			}
+			if (matrixAll[c.getX()][1] == false && key == '\u0020') {
+				return c.getX();
+			}
+		}
+	}
+
+	/*
+	 * examines whether a player has won or not by going through all rows, columns, diagonals 
+	 * and sees if a player has four in a row
+	 */
+
+	public int hasWon() {
+
+		boolean[] b = new boolean[4];
+		int i;
+		int j;
+
+		/* player 1 */
+		for (i = 0; i < 7; i++) {
+			for (j = 0; j < 7; j++) {
+				b[j % 4] = matrix1[i][j];
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 1;
+				}
+
+			}
+			b = new boolean[4];
+		}
+		for (i = 0; i <7; i++) {
+			for (j = 0; j < 7; j++) {
+				b[j % 4] = matrix1[j][i];
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 1;
+				}
+			}
+			b = new boolean[4];
+		}
+
+		int count = 0;
+
+		for (int k = 0; k < 4; k++) {
+			for (i = k; i < 7; i++) {
+				b[count % 4] = matrix1[count][i];
+				count++;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 1;
+				}
+			}
+			b = new boolean[4];
+			count = 0;
+		}
+
+		count = 6;
+		for (int k = 0; k < 4; k++) {
+			for (i = k; i < 7; i++) {
+				b[count % 4] = matrix1[count][i];
+				count--;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 1;
+				}
+			}
+			b = new boolean[4];
+			count = 6;
+		}
+
+		count = 0;
+		for (int k = 0; k < 7; k++) {
+			i = k;
+			while (count < 7 && i < 7) {
+				b[count % 4] = matrix1[i][count];
+				count++;
+				i++;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 1;
+				}
+			}
+			b = new boolean[4];
+			count = 0;
+		}
+
+		count = 0;
+		for (int k = 6; k >= 0; k--) {
+			i = k;
+			while (count < 7 && i >= 0) {
+				b[count % 4] = matrix1[i][count];
+				count++;
+				i--;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 1;
+				}
+			}
+			b = new boolean[4];
+			count = 0;
+		}
+
+		/* player 2 */
+		for (i = 0; i < 7; i++) {
+			for (j = 0; j < 7; j++) {
+				b[j % 4] = matrix2[i][j];
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 2;
+				}
+
+			}
+			b = new boolean[4];
+		}
+		for (i = 0; i <7; i++) {
+			for (j = 0; j < 7; j++) {
+				b[j % 4] = matrix2[j][i];
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 2;
+				}
+			}
+			b = new boolean[4];
+		}
+
+		count = 0;
+
+		for (int k = 0; k < 4; k++) {
+			for (i = k; i < 7; i++) {
+				b[count % 4] = matrix2[count][i];
+				count++;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 2;
+				}
+			}
+			b = new boolean[4];
+			count = 0;
+		}
+
+		count = 6;
+		for (int k = 0; k < 4; k++) {
+			for (i = k; i < 7; i++) {
+				b[count % 4] = matrix2[count][i];
+				count--;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 2;
+				}
+			}
+			b = new boolean[4];
+			count = 6;
+		}
+
+		count = 0;
+		for (int k = 0; k < 7; k++) {
+			i = k;
+			while (count < 7 && i < 7) {
+				b[count % 4] = matrix2[i][count];
+				count++;
+				i++;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 2;
+				}
+			}
+			b = new boolean[4];
+			count = 0;
+		}
+
+		count = 0;
+		for (int k = 6; k >= 0; k--) {
+			i = k;
+			while (count < 7 && i >= 0) {
+				b[count % 4] = matrix2[i][count];
+				count++;
+				i--;
+				if (b[0] == true && b[1] == true && b[2] == true && b[3] == true) {
+					return 2;
+				}
+			}
+			b = new boolean[4];
+			count = 0;
+		}
+
+		return 0;
+
+	}
+
+	/*
+	 * drops the coin and checks that no player has four in a row, in case of
+	 * that returns true
+	 */
+	public int drop(SimpleWindow w, Color col, int xCord, int player) {
+
+		boolean landed = false;
+		int yCord = 0;
+		while (!landed) {
+			if (yCord < 2) {
+				Coin c = new Coin(xCord, yCord, w, Color.white);
+				c = new Coin(xCord, yCord + 1, w, col);
+				w.delay(50);
+			}
+			if (yCord >= 2) {
+				Coin c = new Coin(xCord, yCord, w, Color.blue);
+				c = new Coin(xCord, yCord + 1, w, col);
+				w.delay(50);
+			}
+
+			if (player == 1) {
+				if (matrixAll[xCord][yCord + 1]) {
+					matrix1[xCord][yCord] = true;
+					matrixAll[xCord][yCord] = true;
+					landed = true;
+				}
+
+			}
+
+			if (player == 2) {
+				if (matrixAll[xCord][yCord + 1]) {
+					matrix2[xCord][yCord] = true;
+					matrixAll[xCord][yCord] = true;
+					landed = true;
+				}
+
+			}
+			yCord++;
+
+		}
+
+		int won = hasWon();
+
+		if (won == 1) {
+			return 1;
+		}
+		if (won == 2) {
+			return 2;
+		}
+
+		int full = 0;
+		for (int i = 0; i < 7; i++) {
+			for (int j = 1; j < 7; j++) {
+				if (matrixAll[i][j] == false) {
+					full++;
+				}
+			}
+		}
+		if (full == 0) {
+			return 3;
+		}
+		return 0;
+	}
+
+	/*
+	 * if the player chooses to run the game, the game runs which means that the following method is run
+	 */
+	public void runGame(SimpleWindow w) {
+		while (true) {
+			defaultMatrixes();  /*in the beginning of each round, the matrixes which have the information of 
+			where the coins are at the board are set to default */
+			w.clear(); 
+			for (int i = 0; i < 8; i++) {  /* the board is drawn */
+				for (int j = 2; j < 8; j++) {
+					Block b = new Block(i, j, w);
+				}
+			}
+			boolean running = true;
+			int whoWon = 0;
+			while (running) {
+				if (running) {
+					int xCord = chooseDrop(w, Color.yellow); /*chooseDrop returns the column 
+					where the coin will be dropped */
+					whoWon = drop(w, Color.yellow, xCord, 1); /*the drop method returns 0 if no player has won,
+					1 if player 1 has won, 2 if player 2 has won and 3 if there are no free blocks left; i. e. 
+					it is a tie */
+					if (whoWon != 0) { /* if a player has won or there are no free blocks left the game ends */
+						running = false;
+					}
+				}
+				if (running) { /* the same as above for player 2 */
+					int xCord = chooseDrop(w, Color.magenta);
+					whoWon = drop(w, Color.magenta, xCord, 2);
+					if (whoWon != 0) {
+						running = false;
+					}
+				}
+
+			}
+			playerWon(w, whoWon); /*writes in the window who has won or if it is a tie and let the player 
+			choose if he/she wants to play again */
+
+		}
+	}
+	
+
+	/* the main method that creates a FourInaRowMain-object, a SimpleWindow and prints the menu. 
+	 * If the player chooses to start the game the game is run*/
+
+	public static void main(String[] args) {
+		FourInaRowMain a = new FourInaRowMain();
+		SimpleWindow w = new SimpleWindow(532, 608, "Four in a row");
+		a.printMenu(w);
+		if (a.menuChoice(w)) {
+			a.runGame(w);
+		}
+	}
+
+	
+	
+}
