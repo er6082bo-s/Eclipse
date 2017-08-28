@@ -2,7 +2,6 @@ package pak;
 
 import java.awt.Color;
 
-import pack.SimpleWindow;
 
 public class Coin {
 	private int x;
