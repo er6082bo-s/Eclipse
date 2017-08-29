@@ -1,5 +1,7 @@
 package pak;
-
+/**
+ * A bare bones abstract class for creating the AI.
+ */
 public abstract class FourAI {
 	/**
 	 * Reads the board, evaluates the best position and returns the corresponding index.
