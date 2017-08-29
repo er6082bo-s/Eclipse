@@ -10,7 +10,7 @@ public abstract class FourAI {
 	 * @param matrixAll matrix representing the state of the board
 	 * @return index of column to drop coin at
 	 */
-	public abstract int chooseDrop(boolean[][] matrix1, boolean[][] matrix2, boolean[][] matrixAll);
+	public abstract int chooseDrop(boolean[][] own, boolean[][] enemy, boolean[][] matrixAll);
 	
 	/**
 	 * Optional method, a fail safe in case an illegal index otherwise would be returned.
