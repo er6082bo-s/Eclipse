@@ -5,8 +5,8 @@ package pak;
 public abstract class FourAI {
 	/**
 	 * Reads the board, evaluates the best position and returns the corresponding index.
-	 * @param matrix1 matrix corresponding to the coins of Player 1
-	 * @param matrix2 matrix corresponding to the coins of Player 2
+	 * @param own matrix corresponding to the coins of the AI
+	 * @param enemy matrix corresponding to the coins of the opponent
 	 * @param matrixAll matrix representing the state of the board
 	 * @return index of column to drop coin at
 	 */
