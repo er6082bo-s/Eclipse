@@ -1,6 +1,7 @@
 package pak;
 /**
  * A bare bones abstract class for creating the AI.
+ write your class as a subclass to this class
  */
 public abstract class FourAI {
 	/**
